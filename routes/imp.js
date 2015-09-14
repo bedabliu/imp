@@ -76,21 +76,82 @@ router.get('/teste', function(req, res, next){
                 if($(this).hasClass("grade-aula")){
                     var aulaString = $(this).text();
                     if($(this).children().length > 1){
-                        $(this).children().each(function(i, elem){
-                            switch (i){
-                                case 0:
-                                    aula.professor = $(this).text();
-                                    break;
-                                case 1:
-                                    aula.materia = $(this).text();
-                                    break;
-                                case 2:
-                                    aula.quantidade = $(this).text();
-                                    break;
-                                default:
-                                    break;
-                            }
-                        });
+                        if($(this).children().length < 4) {
+                            $(this).children().each(function (i, elem) {
+                                switch (i) {
+                                    case 0:
+                                        aula.professor = $(this).text();
+                                        break;
+                                    case 1:
+                                        aula.materia = $(this).text();
+                                        break;
+                                    case 2:
+                                        aula.quantidade = $(this).text();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                        } else if ($(this).children().length > 3 && $(this).children().length < 6){
+                            $(this).children().each(function (i, elem) {
+                                switch (i) {
+                                    case 0:
+                                        aula.codigoTurma = $(this).text();
+                                        break;
+                                    case 1:
+                                        aula.horario = $(this).text();
+                                        break;
+                                    case 2:
+                                        aula.professor = $(this).text();
+                                        break;
+                                    case 3:
+                                        aula.materia = $(this).text();
+                                        break;
+                                    case 4:
+                                        aula.quantidade = $(this).text();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                        } else if ($(this).children().length > 6){
+                            $(this).children().each(function (i, elem) {
+                                switch (i) {
+                                    case 0:
+                                        aula.codigoTurma = $(this).text();
+                                        break;
+                                    case 1:
+                                        aula.horario = $(this).text();
+                                        break;
+                                    case 2:
+                                        aula.professor = $(this).text();
+                                        break;
+                                    case 3:
+                                        aula.materia = $(this).text();
+                                        break;
+                                    case 4:
+                                        aula.quantidade = $(this).text();
+                                        break;
+                                    case 6:
+                                        aula.codigoTurma2 = $(this).text();
+                                        break;
+                                    case 7:
+                                        aula.horario2 = $(this).text();
+                                        break;
+                                    case 8:
+                                        aula.professor2 = $(this).text();
+                                        break;
+                                    case 9:
+                                        aula.materia2 = $(this).text();
+                                        break;
+                                    case 10:
+                                        aula.quantidade2 = $(this).text();
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            });
+                        }
                     } else {
                         aula.materia = "Sem Aula";
                     }
