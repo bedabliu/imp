@@ -7,9 +7,10 @@ var fs = require('fs');
 var cheerio = require('cheerio');
 
 /* GET home page. */
-router.get('/', function(req, res, next) {
-    //var url = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=1425*institutoimp";
-    var url = "http://localhost:8585/imp/teste";
+router.get('/getGrade', function(req, res, next) {
+    var url = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=1425*institutoimp";
+    //var url = "http://localhost:8585/imp/teste";
+    //var url = req.params.url;
     request({
         uri: url,
         method: "GET",
@@ -29,9 +30,11 @@ router.get('/', function(req, res, next) {
 
         //All is good. Print the body
         var parser = new htmlparser.parseDOM(body);
-        console.log(parser);
+        //console.log(parser);
+        //console.log(body);
+        body = verificaDivsHtml(body);
 
-        res.send(body); // Show the HTML for the Modulus homepage.
+        res.send(extrairDadosDoHtml(body)); // Show the HTML for the Modulus homepage.
     });
 
 });
@@ -46,7 +49,23 @@ router.get('/teste', function(req, res, next){
 
 });
 
+function verificaDivsHtml(body){
+    var divCount = (body.search(/\<div\>/g) || []);
+    var divCloseCount = (body.search(/\<\/div\>/g) || []);
+    if(divCount != divCloseCount){
+        body = body.replace(/\<\/div\>/, "");
+        console.log("Html has some error");
+        //console.log(body);
+        verificaDivsHtml(body);
+    }else {
+        return body;
+    }
+}
+
+
 function extrairDadosDoHtml (html){
+
+    $ = cheerio.load(html);
 
     var dia = {};
     var dias = []
@@ -73,7 +92,7 @@ function extrairDadosDoHtml (html){
             gradeHoraria.turma = turma;
         }
     });
-    $('tbody').children().children().each(function(i, elem){
+    $('tr').children().each(function(i, elem){
         if($(this).text().trim().length > 0) {
             if($(this).hasClass("grade-dia")){
                 var data = $(this).text().slice($(this).text().length - 11);
@@ -159,7 +178,7 @@ function extrairDadosDoHtml (html){
                         });
                     }
                 } else {
-                    aula.materia = "Sem Aula";
+                    aula.materia = $(this).text();
                 }
                 aulas.push(aula);
                 aula = {};
