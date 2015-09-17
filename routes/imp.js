@@ -57,9 +57,7 @@ router.get('/getGrade/:url_curso', function(req, res, next) {
         }
 
         //All is good. Print the body
-        var parser = new htmlparser.parseDOM(body);
-        //console.log(parser);
-        //console.log(body);
+        console.log(body);
         body = verificaDivsHtml(body);
 
         res.send(extrairDadosDoHtml(body)); // Show the HTML for the Modulus homepage.
