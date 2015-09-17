@@ -58,7 +58,7 @@ router.get('/getGrade/:url_curso', function(req, res, next) {
 
         //All is good. Print the body
         console.log(body);
-        body = verificaDivsHtml(body);
+        //body = verificaDivsHtml(body);
 
         console.log("********************************************\n" + body);
         res.send(extrairDadosDoHtml(body)); // Show the HTML for the Modulus homepage.
@@ -70,8 +70,8 @@ router.get('/teste', function(req, res, next){
 
     fs.readFile('/home/f9342808/WebstormProjects/imp/teste.html', 'utf8', function(err, html){
         $ = cheerio.load(html);
-        body = verificaDivsHtml(html);
-        res.send(extrairDadosDoHtml(html));
+        var body = verificaDivsHtml(html);
+        res.send(extrairDadosDoHtml(body));
     });
 
 });
@@ -92,7 +92,7 @@ function verificaDivsHtml(body){
         console.log("Html has some error");
         //console.log(body);
         verificaDivsHtml(body);
-    }else {
+    } else {
         return body;
     }
 }
