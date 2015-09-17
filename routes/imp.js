@@ -58,10 +58,12 @@ router.get('/getGrade/:url_curso', function(req, res, next) {
 
         //All is good. Print the body
         //console.log(body);
-        html = verificaDivsHtml(body);
+        corrigeDivs(body, function(htmlCorrigido){
+            res.send(extrairDadosDoHtml(body));
+        });
 
         //console.log("********************************************\n" + body);
-        res.send(extrairDadosDoHtml(body)); // Show the HTML for the Modulus homepage.
+         // Show the HTML for the Modulus homepage.
     });
 
 });
@@ -71,8 +73,10 @@ router.get('/teste', function(req, res, next){
     fs.readFile('/home/f9342808/WebstormProjects/imp/teste.html', 'utf8', function(err, html){
         $ = cheerio.load(html);
         var body = verificaDivsHtml(html);
-        console.log(html);
-        res.send(extrairDadosDoHtml(html));
+        corrigeDivs(html, function(htmlCorrigido){
+            res.send(extrairDadosDoHtml(htmlCorrigido));
+        });
+
     });
 
 });
@@ -85,6 +89,18 @@ router.get('/teste2', function(req, res, next){
     });
 
 });
+
+function corrigeDivs(bodyToUpdate, callback){
+    var divCount = occurrences(bodyToUpdate, "</div>");
+    if(divCount > 2){
+        bodyToUpdate = bodyToUpdate.replace("</div>", "</td>");
+        console.log("Html has some error. Trying to fix...");
+        corrigeDivs(bodyToUpdate)
+    }
+    if (callback && typeof(callback) === "function") {
+        callback(bodyToUpdate);
+    }
+}
 
 function verificaDivsHtml(body){
     var divCount = occurrences(body, "</div>");
@@ -134,7 +150,7 @@ function extrairCursosDoHtml(html){
 }
 
 function extrairDadosDoHtml (html){
-    console.log(html);
+    //console.log(html);
     $ = cheerio.load(html);
 
     var dia = {};
