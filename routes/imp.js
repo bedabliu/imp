@@ -96,9 +96,10 @@ function corrigeDivs(bodyToUpdate, callback){
         bodyToUpdate = bodyToUpdate.replace("</div>", "</td>");
         console.log("Html has some error. Trying to fix...");
         corrigeDivs(bodyToUpdate)
-    }
-    if (callback && typeof(callback) === "function") {
-        callback(bodyToUpdate);
+    }else {
+        if (callback && typeof(callback) === "function") {
+            callback(bodyToUpdate);
+        }
     }
 }
 
