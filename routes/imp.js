@@ -150,7 +150,7 @@ function extrairCursosDoHtml(html){
 }
 
 function extrairDadosDoHtml (html){
-    //console.log(html);
+    console.log(html);
     $ = cheerio.load(html);
 
     var dia = {};
