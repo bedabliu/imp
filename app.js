@@ -33,12 +33,12 @@ fs.readdirSync(__dirname + '/models').forEach(function(filename){
 });
 
 //mongoose.connect('mongodb://localhost/teste');
-mongoose.connect('mongodb://braccialli:teste1234@chinchilafrita.com/braccialli');
-var db = mongoose.connection;
-db.on('error', console.error.bind(console, 'connection error:'));
-db.once('open', function (callback) {
-    console.log('Funciona o Mongo');
-});
+//mongoose.connect('mongodb://braccialli:teste1234@chinchilafrita.com/braccialli');
+//var db = mongoose.connection;
+//db.on('error', console.error.bind(console, 'connection error:'));
+//db.once('open', function (callback) {
+//    console.log('Funciona o Mongo');
+//});
 
 
 // catch 404 and forward to error handler

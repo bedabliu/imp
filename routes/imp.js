@@ -6,9 +6,37 @@ var htmlparser = require('htmlparser2');
 var fs = require('fs');
 var cheerio = require('cheerio');
 
+
+router.get('/getCourses/:unidade', function(req, res){
+    var url_raiz = "http://impconcursos.com.br/grade-horaria/";
+    var url = url_raiz + req.params.unidade;
+    request({
+        uri: url,
+        method: "GET",
+        timeout: 10000,
+        followRedirect: true,
+        maxRedirects: 10
+    }, function(error, response, body) {
+        //Check for error
+        if(error){
+            res.send('Error:', error);
+        }
+
+        //Check for right status code
+        if(response.statusCode !== 200){
+            res.send('Invalid Status Code Returned:', response.statusCode);
+        }
+
+        //All is good. Print the body
+        res.send(extrairCursosDoHtml(body)); // Show the HTML for the Modulus homepage.
+    });
+});
+
 /* GET home page. */
-router.get('/getGrade', function(req, res, next) {
-    var url = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=1425*institutoimp";
+router.get('/getGrade/:url_curso', function(req, res, next) {
+    //var url = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=1425*institutoimp";
+    var url_base = "http://impconcursos.com.br/wp-content/themes/imp/";
+    var url = url_base + req.params.url_curso;
     //var url = "http://localhost:8585/imp/teste";
     //var url = req.params.url;
     request({
@@ -44,16 +72,25 @@ router.get('/teste', function(req, res, next){
     fs.readFile('/home/f9342808/WebstormProjects/imp/teste.html', 'utf8', function(err, html){
         $ = cheerio.load(html);
         console.log($(".conteudo strong").text());
+        body = verificaDivsHtml(html);
         res.send(extrairDadosDoHtml(html));
     });
 
 });
 
+router.get('/teste2', function(req, res, next){
+
+    fs.readFile('/home/f9342808/WebstormProjects/imp/list.html', 'utf8', function(err, html){
+        $ = cheerio.load(html);
+        res.send(extrairCursosDoHtml(html));
+    });
+
+});
+
 function verificaDivsHtml(body){
-    var divCount = (body.search(/\<div\>/g) || []);
-    var divCloseCount = (body.search(/\<\/div\>/g) || []);
-    if(divCount != divCloseCount){
-        body = body.replace(/\<\/div\>/, "");
+    var divCount = occurrences(body, "</div>");
+    if(divCount >2){
+        body = body.replace("</div>", "</td>");
         console.log("Html has some error");
         //console.log(body);
         verificaDivsHtml(body);
@@ -62,6 +99,40 @@ function verificaDivsHtml(body){
     }
 }
 
+function occurrences(string, subString, allowOverlapping){
+
+    string+=""; subString+="";
+    if(subString.length<=0) return string.length+1;
+
+    var n=0, pos=0;
+    var step=allowOverlapping?1:subString.length;
+
+    while(true){
+        pos=string.indexOf(subString,pos);
+        if(pos>=0){ ++n; pos+=step; } else break;
+    }
+    return n;
+}
+
+function extrairCursosDoHtml(html){
+    $ = cheerio.load(html);
+    var cursos = { grupos : []};
+    $('select.grade-input').children().each(function(i, elem){
+        if($(this).is("OPTGROUP")){
+            var grupo = {};
+            grupo.nome = $(this).attr('label');
+            grupo.curso = [];
+            $(this).children().each(function(i, elem){
+                var curso = {};
+                curso.nome = $(this).text();
+                curso.url = $(this).attr('value');
+                grupo.curso.push(curso);
+            });
+            cursos.grupos.push(grupo);
+        }
+    });
+    return cursos;
+}
 
 function extrairDadosDoHtml (html){
 
