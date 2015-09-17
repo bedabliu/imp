@@ -59,7 +59,7 @@ router.get('/getGrade/:url_curso', function(req, res, next) {
         //All is good. Print the body
         //console.log(body);
         corrigeDivs(body, function(htmlCorrigido){
-            res.send(extrairDadosDoHtml(body));
+            res.send(extrairDadosDoHtml(htmlCorrigido));
         });
 
         //console.log("********************************************\n" + body);
