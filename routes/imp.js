@@ -35,7 +35,7 @@ router.get('/getCourses/:unidade', function(req, res){
 /* GET home page. */
 router.get('/getGrade/:url_curso', function(req, res, next) {
     //var url = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=1425*institutoimp";
-    var url_base = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?=";
+    var url_base = "http://impconcursos.com.br/wp-content/themes/imp/getTurmas.php?q=";
     var url = url_base + req.params.url_curso;
     //var url = "http://localhost:8585/imp/teste";
     //var url = req.params.url;
