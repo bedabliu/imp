@@ -95,7 +95,7 @@ function corrigeDivs(bodyToUpdate, callback){
     if(divCount > 2){
         bodyToUpdate = bodyToUpdate.replace("</div>", "</td>");
         console.log("Html has some error. Trying to fix...");
-        corrigeDivs(bodyToUpdate)
+        corrigeDivs(bodyToUpdate, callback)
     }else {
         if (callback && typeof(callback) === "function") {
             callback(bodyToUpdate);
